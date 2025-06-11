@@ -1,13 +1,32 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Clock, Eye } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
+import NewsletterModal from '../components/NewsletterModal';
 import { products, categories } from '../data/products';
 import { Badge } from '../components/ui/badge';
 
 const HomePage = () => {
+  const [showNewsletterModal, setShowNewsletterModal] = useState(false);
   const featuredProducts = products.slice(0, 4);
   
+  // Newsletter modal trigger on scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      const windowHeight = window.innerHeight;
+      
+      // Show modal after scrolling down 70% of the viewport
+      if (scrollPosition > windowHeight * 0.7 && !localStorage.getItem('newsletter_shown')) {
+        setShowNewsletterModal(true);
+        localStorage.setItem('newsletter_shown', 'true');
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   // Hot deals products with special pricing
   const hotDeals = [
     {
@@ -268,6 +287,11 @@ const HomePage = () => {
           </div>
         </div>
       </section>
+
+      <NewsletterModal 
+        isOpen={showNewsletterModal} 
+        onClose={() => setShowNewsletterModal(false)} 
+      />
     </div>
   );
 };

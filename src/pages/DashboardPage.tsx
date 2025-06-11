@@ -1,11 +1,43 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { User, Package, ShoppingBag, Settings } from 'lucide-react';
+import { User, Package, ShoppingBag, Settings, Heart, MapPin, Bell } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import ProductCard from '../components/ProductCard';
+import { products } from '../data/products';
 
 const DashboardPage = () => {
   const { user } = useAuth();
+  const [emailNotifications, setEmailNotifications] = useState(true);
+  const [smsNotifications, setSmsNotifications] = useState(false);
+  const [marketingEmails, setMarketingEmails] = useState(true);
+
+  // Dummy wishlist data
+  const wishlistItems = products.slice(2, 5);
+  
+  // Dummy address data
+  const addresses = [
+    {
+      id: 1,
+      type: 'Home',
+      name: 'John Doe',
+      street: '123 Tech Street',
+      city: 'Innovation City',
+      state: 'IC',
+      zip: '12345',
+      isDefault: true
+    },
+    {
+      id: 2,
+      type: 'Work',
+      name: 'John Doe',
+      street: '456 Business Ave',
+      city: 'Corporate Town',
+      state: 'CT',
+      zip: '67890',
+      isDefault: false
+    }
+  ];
 
   const dashboardItems = [
     {
@@ -82,6 +114,131 @@ const DashboardPage = () => {
               </Link>
             );
           })}
+        </div>
+
+        {/* Wishlist Section */}
+        <div className="bg-white rounded-lg shadow-md mb-8">
+          <div className="p-6 border-b border-gray-200">
+            <div className="flex items-center space-x-3">
+              <Heart className="w-6 h-6 text-red-500" />
+              <h2 className="text-xl font-semibold text-gray-900">My Wishlist</h2>
+              <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-sm">
+                {wishlistItems.length} items
+              </span>
+            </div>
+          </div>
+          <div className="p-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {wishlistItems.map((product) => (
+                <div key={product.id} className="relative">
+                  <ProductCard product={product} />
+                  <button className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-600 transition-colors">
+                    <Heart className="w-4 h-4 fill-current" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Address Book Section */}
+        <div className="bg-white rounded-lg shadow-md mb-8">
+          <div className="p-6 border-b border-gray-200">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <MapPin className="w-6 h-6 text-blue-500" />
+                <h2 className="text-xl font-semibold text-gray-900">Address Book</h2>
+              </div>
+              <button className="bg-primary text-white px-4 py-2 rounded-lg hover:bg-primary/90 transition-colors">
+                Add Address
+              </button>
+            </div>
+          </div>
+          <div className="p-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {addresses.map((address) => (
+                <div key={address.id} className="border border-gray-200 rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center space-x-2">
+                      <h3 className="font-semibold text-gray-900">{address.type}</h3>
+                      {address.isDefault && (
+                        <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">
+                          Default
+                        </span>
+                      )}
+                    </div>
+                    <button className="text-primary hover:text-primary/80 text-sm">
+                      Edit
+                    </button>
+                  </div>
+                  <div className="text-gray-600 text-sm space-y-1">
+                    <p className="font-medium text-gray-900">{address.name}</p>
+                    <p>{address.street}</p>
+                    <p>{address.city}, {address.state} {address.zip}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Notification Preferences */}
+        <div className="bg-white rounded-lg shadow-md mb-8">
+          <div className="p-6 border-b border-gray-200">
+            <div className="flex items-center space-x-3">
+              <Bell className="w-6 h-6 text-yellow-500" />
+              <h2 className="text-xl font-semibold text-gray-900">Notification Preferences</h2>
+            </div>
+          </div>
+          <div className="p-6 space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="font-medium text-gray-900">Email Notifications</h3>
+                <p className="text-sm text-gray-600">Receive order updates via email</p>
+              </div>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={emailNotifications}
+                  onChange={(e) => setEmailNotifications(e.target.checked)}
+                  className="sr-only peer"
+                />
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+              </label>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="font-medium text-gray-900">SMS Notifications</h3>
+                <p className="text-sm text-gray-600">Receive shipping updates via SMS</p>
+              </div>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={smsNotifications}
+                  onChange={(e) => setSmsNotifications(e.target.checked)}
+                  className="sr-only peer"
+                />
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+              </label>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="font-medium text-gray-900">Marketing Emails</h3>
+                <p className="text-sm text-gray-600">Receive promotional offers and deals</p>
+              </div>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={marketingEmails}
+                  onChange={(e) => setMarketingEmails(e.target.checked)}
+                  className="sr-only peer"
+                />
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary/20 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+              </label>
+            </div>
+          </div>
         </div>
 
         {/* Quick Stats */}
