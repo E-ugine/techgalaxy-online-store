@@ -1,12 +1,40 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Clock, Eye } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
 import { products, categories } from '../data/products';
+import { Badge } from '../components/ui/badge';
 
 const HomePage = () => {
   const featuredProducts = products.slice(0, 4);
+  
+  // Hot deals products with special pricing
+  const hotDeals = [
+    {
+      ...products[0], // iPhone 15 Pro Max
+      price: 999,
+      originalPrice: 1199,
+      dealBadge: "Deal of the Day",
+      timeLeft: "23:45:30"
+    },
+    {
+      ...products[4], // Sony WH-1000XM5
+      price: 299,
+      originalPrice: 399,
+      dealBadge: "Limited Time",
+      timeLeft: "12:30:15"
+    },
+    {
+      ...products[6], // Samsung TV
+      price: 1499,
+      originalPrice: 1799,
+      dealBadge: "Flash Sale",
+      timeLeft: "06:15:45"
+    }
+  ];
+
+  // Recently viewed products (dummy data)
+  const recentlyViewed = products.slice(1, 5);
 
   return (
     <div className="min-h-screen">
@@ -109,6 +137,78 @@ const HomePage = () => {
         </div>
       </section>
 
+      {/* Hot Deals Section */}
+      <section className="py-16 bg-gradient-to-r from-red-50 to-orange-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <div className="flex items-center justify-center mb-4">
+              <Clock className="w-8 h-8 text-red-500 mr-3" />
+              <h2 className="text-3xl font-bold text-gray-900">Hot Deals</h2>
+            </div>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Limited time offers you don't want to miss!
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {hotDeals.map((deal, index) => (
+              <div key={`deal-${index}`} className="relative">
+                <div className="absolute -top-2 -right-2 z-10">
+                  <Badge className="bg-red-500 text-white px-3 py-1 text-sm font-bold">
+                    {deal.dealBadge}
+                  </Badge>
+                </div>
+                
+                <div className="bg-white rounded-lg shadow-lg overflow-hidden border-2 border-red-200 hover:border-red-300 transition-colors">
+                  <div className="relative">
+                    <img
+                      src={deal.image}
+                      alt={deal.name}
+                      className="w-full h-48 object-cover"
+                    />
+                    <div className="absolute top-2 left-2 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+                      Save ${(deal.originalPrice! - deal.price).toFixed(0)}
+                    </div>
+                  </div>
+                  
+                  <div className="p-6">
+                    <h3 className="font-bold text-lg text-gray-900 mb-2">{deal.name}</h3>
+                    
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center space-x-2">
+                        <span className="text-2xl font-bold text-red-600">
+                          ${deal.price.toFixed(2)}
+                        </span>
+                        <span className="text-lg text-gray-500 line-through">
+                          ${deal.originalPrice?.toFixed(2)}
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <div className="bg-red-100 rounded-lg p-3 mb-4">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-red-800">Time left:</span>
+                        <span className="text-lg font-bold text-red-600 font-mono">
+                          {deal.timeLeft}
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <Link
+                      to={`/product/${deal.id}`}
+                      className="w-full bg-red-500 text-white py-3 px-4 rounded-lg hover:bg-red-600 transition-colors inline-flex items-center justify-center font-medium"
+                    >
+                      Grab This Deal
+                      <ArrowRight className="ml-2 w-4 h-4" />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Promotional Banners */}
       <section className="py-16 bg-muted">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -134,6 +234,37 @@ const HomePage = () => {
                 Learn More
               </Link>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Recently Viewed Section */}
+      <section className="py-16 bg-muted">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center mb-12">
+            <Eye className="w-6 h-6 text-gray-600 mr-3" />
+            <h2 className="text-2xl font-bold text-gray-900">Recently Viewed</h2>
+          </div>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {recentlyViewed.map((product) => (
+              <div key={`recent-${product.id}`} className="relative">
+                <ProductCard product={product} />
+                <div className="absolute top-2 right-2 bg-accent text-white px-2 py-1 rounded-full text-xs">
+                  Viewed
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          <div className="text-center mt-8">
+            <Link
+              to="/products"
+              className="text-accent hover:text-accent/80 font-medium inline-flex items-center"
+            >
+              View All Products
+              <ArrowRight className="ml-1 w-4 h-4" />
+            </Link>
           </div>
         </div>
       </section>
