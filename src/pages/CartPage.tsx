@@ -5,7 +5,7 @@ import { Minus, Plus, Trash2, ShoppingBag } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 
 const CartPage = () => {
-  const { items, updateQuantity, removeFromCart, getTotalPrice, clearCart } = useCart();
+  const { items, updateQuantity, removeFromCart, getTotalPrice } = useCart();
 
   if (items.length === 0) {
     return (
@@ -24,11 +24,6 @@ const CartPage = () => {
       </div>
     );
   }
-
-  const handleCheckout = () => {
-    alert('Proceeding to checkout... (This is a demo)');
-    clearCart();
-  };
 
   return (
     <div className="min-h-screen bg-muted/50">
@@ -133,12 +128,12 @@ const CartPage = () => {
                 </div>
               </div>
 
-              <button
-                onClick={handleCheckout}
-                className="w-full bg-primary text-white py-3 rounded-lg hover:bg-primary/90 transition-colors mb-4"
+              <Link
+                to="/checkout"
+                className="w-full bg-primary text-white py-3 rounded-lg hover:bg-primary/90 transition-colors mb-4 block text-center"
               >
                 Proceed to Checkout
-              </button>
+              </Link>
 
               <Link
                 to="/products"
