@@ -1,11 +1,12 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Minus, Plus, Trash2, ShoppingBag } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 
 const CartPage = () => {
   const { items, updateQuantity, removeFromCart, getTotalPrice } = useCart();
+  const { isAuthenticated } = useAuth();
 
   if (items.length === 0) {
     return (
@@ -128,12 +129,27 @@ const CartPage = () => {
                 </div>
               </div>
 
-              <Link
-                to="/checkout"
-                className="w-full bg-primary text-white py-3 rounded-lg hover:bg-primary/90 transition-colors mb-4 block text-center"
-              >
-                Proceed to Checkout
-              </Link>
+              {/* Conditional checkout button based on authentication */}
+              {isAuthenticated ? (
+                <Link
+                  to="/checkout"
+                  className="w-full bg-primary text-white py-3 rounded-lg hover:bg-primary/90 transition-colors mb-4 block text-center"
+                >
+                  Proceed to Checkout
+                </Link>
+              ) : (
+                <div className="mb-4">
+                  <Link
+                    to="/login"
+                    className="w-full bg-primary text-white py-3 rounded-lg hover:bg-primary/90 transition-colors mb-2 block text-center"
+                  >
+                    Login to Checkout
+                  </Link>
+                  <p className="text-sm text-gray-500 text-center">
+                    Please log in to proceed with your purchase
+                  </p>
+                </div>
+              )}
 
               <Link
                 to="/products"

@@ -1,8 +1,8 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, CreditCard, Truck, MapPin, User } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
@@ -10,9 +10,18 @@ import { toast } from 'sonner';
 
 const CheckoutPage = () => {
   const { items, getTotalPrice, clearCart } = useCart();
+  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [isProcessing, setIsProcessing] = useState(false);
-  
+
+  // Check authentication on component mount
+  useEffect(() => {
+    if (!isAuthenticated) {
+      toast.error('Please log in to proceed to checkout');
+      navigate('/login');
+    }
+  }, [isAuthenticated, navigate]);
+
   const [shippingInfo, setShippingInfo] = useState({
     firstName: '',
     lastName: '',
@@ -36,6 +45,18 @@ const CheckoutPage = () => {
   const shipping = subtotal > 99 ? 0 : 9.99;
   const tax = subtotal * 0.08;
   const total = subtotal + shipping + tax;
+
+  // If not authenticated, show loading or nothing while redirecting
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-muted/50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-gray-600">Redirecting to login...</p>
+        </div>
+      </div>
+    );
+  }
 
   // If cart is empty, redirect to products
   if (items.length === 0) {
