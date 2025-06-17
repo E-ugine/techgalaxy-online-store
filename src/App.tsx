@@ -1,3 +1,4 @@
+
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from './components/ui/sonner';
@@ -10,13 +11,9 @@ import HomePage from './pages/HomePage';
 import ProductsPage from './pages/ProductsPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import AboutPage from './pages/AboutPage';
-import ContactPage from './pages/ContactPage';
 import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
 import ProfilePage from './pages/ProfilePage';
 import CartPage from './pages/CartPage';
-import CheckoutPage from './pages/CheckoutPage';
-import OrderConfirmationPage from './pages/OrderConfirmationPage';
 
 function App() {
   const queryClient = new QueryClient();
@@ -35,13 +32,9 @@ function App() {
                     <Route path="/products" element={<ProductsPage />} />
                     <Route path="/product/:id" element={<ProductDetailPage />} />
                     <Route path="/about" element={<AboutPage />} />
-                    <Route path="/contact" element={<ContactPage />} />
                     <Route path="/login" element={<LoginPage />} />
-                    <Route path="/register" element={<RegisterPage />} />
                     <Route path="/profile" element={<ProfilePage />} />
                     <Route path="/cart" element={<CartPage />} />
-                    <Route path="/checkout" element={<CheckoutPage />} />
-                    <Route path="/order-confirmation" element={<OrderConfirmationPage />} />
                   </Routes>
                 </main>
                 <Footer />

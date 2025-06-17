@@ -55,9 +55,6 @@ const HomePage = () => {
     }
   ];
 
-  // Recently viewed products (dummy data)
-  const recentlyViewed = products.slice(1, 5);
-
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
