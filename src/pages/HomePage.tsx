@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Clock, Eye } from 'lucide-react';
@@ -12,6 +11,9 @@ const HomePage = () => {
   const [showNewsletterModal, setShowNewsletterModal] = useState(false);
   const { recentlyViewed } = useRecentlyViewed();
   const featuredProducts = products.slice(0, 4);
+  
+  // Debug log to see if recently viewed is working
+  console.log('Recently viewed products:', recentlyViewed);
   
   // Newsletter modal trigger on scroll
   useEffect(() => {
@@ -257,38 +259,56 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Recently Viewed Section */}
-      {recentlyViewed.length > 0 && (
-        <section className="py-16 bg-muted">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center mb-12">
-              <Eye className="w-6 h-6 text-gray-600 mr-3" />
-              <h2 className="text-2xl font-bold text-gray-900">Recently Viewed</h2>
-            </div>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {recentlyViewed.slice(0, 4).map((product) => (
-                <div key={`recent-${product.id}`} className="relative">
-                  <ProductCard product={product} />
-                  <div className="absolute top-2 right-2 bg-accent text-white px-2 py-1 rounded-full text-xs">
-                    Viewed
+      {/* Recently Viewed Section - Always show for testing, then conditionally */}
+      <section className="py-16 bg-muted">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center mb-8">
+            <Eye className="w-6 h-6 text-gray-600 mr-3" />
+            <h2 className="text-2xl font-bold text-gray-900">Recently Viewed</h2>
+          </div>
+          
+          {recentlyViewed.length > 0 ? (
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {recentlyViewed.slice(0, 4).map((product) => (
+                  <div key={`recent-${product.id}`} className="relative">
+                    <ProductCard product={product} />
+                    <div className="absolute top-2 right-2 bg-accent text-white px-2 py-1 rounded-full text-xs">
+                      Viewed
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
-            
-            <div className="text-center mt-8">
+                ))}
+              </div>
+              
+              <div className="text-center mt-8">
+                <Link
+                  to="/products"
+                  className="text-accent hover:text-accent/80 font-medium inline-flex items-center"
+                >
+                  View All Products
+                  <ArrowRight className="ml-1 w-4 h-4" />
+                </Link>
+              </div>
+            </>
+          ) : (
+            <div className="text-center py-12">
+              <div className="text-gray-400 mb-4">
+                <Eye className="w-16 h-16 mx-auto mb-4 opacity-30" />
+              </div>
+              <p className="text-gray-500 mb-6">
+                Products you view will appear here for easy access
+              </p>
               <Link
                 to="/products"
-                className="text-accent hover:text-accent/80 font-medium inline-flex items-center"
+                className="bg-primary text-white px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors inline-flex items-center"
               >
-                View All Products
-                <ArrowRight className="ml-1 w-4 h-4" />
+                Browse Products
+                <ArrowRight className="ml-2 w-5 h-5" />
               </Link>
             </div>
-          </div>
-        </section>
-      )}
+          )}
+        </div>
+      </section>
 
       <NewsletterModal 
         isOpen={showNewsletterModal} 
